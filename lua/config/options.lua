@@ -12,7 +12,5 @@ vim.opt.clipboard = "unnamedplus"
 vim.opt.scrolloff = 999
 vim.opt.termguicolors = true
 
-vim.g.neovide_transparency = 0.6
-
-vim.opt.listchars:append({ tab = "»·", trail = "·", extends = "»", precedes = "«", nbsp = "•" })
 vim.o.guifont = "JetBrainsMonoNL Nerd Font:h16" -- text below applies for VimScript
+vim.opt.list = false
