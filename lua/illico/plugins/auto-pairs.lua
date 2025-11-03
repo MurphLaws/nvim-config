@@ -1,40 +1,23 @@
-
-
+-- lua/plugins/leap.lua
 return {
-  "windwp/nvim-autopairs",
-  event = { "InsertEnter" },
-  dependencies = {
-    "hrsh7th/nvim-cmp",
-  },
-  config = function()
-    local autopairs = require("nvim-autopairs")
+	"ggandor/leap.nvim",
+	config = function()
+		local leap = require("leap")
 
-    autopairs.setup({
-      check_ts = true, -- enable treesitter integration
-      ts_config = {
-        lua = { "string" },
-        javascript = { "template_string" },
-        java = false,
-        python = { "string", "f_string" },
-        gdscript = { "string" },
-        org = { "src_block" },
-      },
-      fast_wrap = {
-        map = "<M-e>",
-        chars = { "{", "[", "(", '"', "'" },
-        pattern = string.gsub([[ [%'%"%)%>%]%)%}%,] ]], "%s+", ""),
-        offset = 0, -- Offset from pattern match
-        end_key = "$",
-        keys = "qwertyuiopzxcvbnmasdfghjkl",
-        check_comma = true,
-        highlight = "Search",
-        highlight_grey = "Comment",
-      },
-    })
+		-- Set up leap with default mappings (includes 's' and 'S')
+		leap.add_default_mappings()
 
-    -- integrate with nvim-cmp
-    local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-    local cmp = require("cmp")
-    cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
-  end,
+		-- If you want to customize the mapping explicitly:
+		vim.keymap.set({ "n", "x", "o" }, "s", function()
+			leap.leap({ target_windows = { vim.fn.win_getid() } })
+		end, { desc = "Leap forward/backward within current window" })
+
+		vim.keymap.set({ "n", "x", "o" }, "S", function()
+			leap.leap({ target_windows = require("leap.util").get_enterable_windows() })
+		end, { desc = "Leap across windows" })
+
+		-- Optional highlight tweaks
+		vim.api.nvim_set_hl(0, "LeapBackdrop", { link = "Comment" })
+		vim.api.nvim_set_hl(0, "LeapMatch", { fg = "red", bold = true, nocombine = true })
+	end,
 }
