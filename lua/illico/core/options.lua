@@ -1,46 +1,33 @@
+-- illico/core/options.lua
+
+-- ===== Basics =====
 vim.opt.guicursor = ""
 vim.opt.nu = true
 vim.opt.relativenumber = true
-
-vim.opt.tabstop = 4
-vim.opt.softtabstop = 4
-vim.opt.shiftwidth = 4
-
-vim.opt.expandtab = true
-vim.opt.autoindent = true
-vim.opt.smartindent = true 
-vim.opt.wrap = false
--- enable conceal
-vim.opt.conceallevel = 2
-vim.opt.concealcursor = "nc"
+vim.opt.signcolumn = "yes"
+vim.opt.termguicolors = true
 
 vim.opt.swapfile = false
 vim.opt.backup = false
 vim.opt.undofile = true
 
-vim.opt.incsearch = true 
-vim.opt.inccommand = "split"
-vim.opt.ignorecase = true 
-vim.opt.smartcase = true 
+vim.opt.updatetime = 200
+vim.opt.timeoutlen = 300
+vim.opt.wrap = false
 
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
 
-vim.opt.termguicolors = true 
-vim.opt.background = "dark"
-vim.opt.scrolloff = 8
-vim.opt.signcolumn = "yes"
+-- ===== System clipboard =====
+vim.opt.clipboard = "unnamedplus"
 
-vim.opt.backspace = {"start", "eol", "indent"}
+-- Where Neovim stores views (you can keep default; this just ensures it exists)
+vim.opt.viewdir = vim.fn.stdpath("state") .. "/view"
+vim.fn.mkdir(vim.opt.viewdir:get(), "p")
 
-vim.opt.splitright = true
-vim.opt.splitbelow = true
+-- Save/load folds (and cursor, etc.) in views
+vim.opt.viewoptions = { "cursor", "folds" }
 
-
-vim.opt.isfname:append("@-@")
-vim.opt.updatetime = 50
-
-
-vim.opt.clipboard:append("unnamedplus")
-vim.opt.hlsearch = true
-
-vim.opt.mouse = "a"
-vim.g.editorconfig = true
+vim.o.wildmenu = false
+vim.o.wildoptions = "" -- IMPORTANT: removes the built-in popupmenu behavior

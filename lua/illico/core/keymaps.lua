@@ -42,3 +42,7 @@ vim.keymap.set("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally"
 vim.keymap.set("n", "<leader>se", "<C-w>=", { desc = "Make splits equal size" }) -- make split windows equal width & height
 -- close current split window
 vim.keymap.set("n", "<leader>sx", "<cmd>close<CR>", { desc = "Close current split" })
+
+vim.keymap.set("n", "<leader>ni", function()
+	vim.cmd("edit ~/notes/index.norg")
+end, { desc = "Go to Neorg index" })
