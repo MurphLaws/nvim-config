@@ -44,6 +44,9 @@ return {
 					"rust",
 					"ron",
 					"norg", -- Required for Neorg
+					"gdscript", -- Godot GDScript
+					"gdshader", -- Godot Shaders
+					"godot_resource", -- Godot Resources
 				},
 				incremental_selection = {
 					enable = true,

@@ -36,5 +36,8 @@ vim.o.wildoptions = "" -- IMPORTANT: removes the built-in popupmenu behavior
 vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 
-
-
+-- ===== Godot Integration =====
+-- Inicia un servidor (socket) en una ruta fija para que Godot pueda conectarse
+-- a esta instancia de Neovim en lugar de abrir una nueva.
+local godot_socket = "/tmp/godot.pipe"
+pcall(vim.fn.serverstart, godot_socket)

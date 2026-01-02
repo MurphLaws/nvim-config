@@ -58,4 +58,23 @@ return {
 			vim.keymap.set({ "n", "x" }, "sk", sj.split, { desc = "Split arguments" })
 		end,
 	},
+
+	-- ─────────────────────────────
+	-- Mini Files (Explorer)
+	-- ─────────────────────────────
+	{
+		"echasnovski/mini.files",
+		version = "*",
+		config = function()
+			require("mini.files").setup()
+
+			vim.keymap.set("n", "<leader>em", function()
+				-- Abre Mini Files en el directorio del archivo actual si es posible,
+				-- de lo contrario en el directorio de trabajo actual.
+				local buf_name = vim.api.nvim_buf_get_name(0)
+				local path = vim.fn.filereadable(buf_name) == 1 and buf_name or nil
+				require("mini.files").open(path)
+			end, { desc = "Open Mini Files" })
+		end,
+	},
 }
