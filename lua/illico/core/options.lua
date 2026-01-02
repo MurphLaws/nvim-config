@@ -31,3 +31,10 @@ vim.opt.viewoptions = { "cursor", "folds" }
 
 vim.o.wildmenu = false
 vim.o.wildoptions = "" -- IMPORTANT: removes the built-in popupmenu behavior
+
+-- Transparency: Clear background for main window and floating windows
+vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+
+
+

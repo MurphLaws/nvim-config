@@ -10,9 +10,8 @@ return {
 		cmd = "Neotree",
 		keys = {
 			{
-				"<leader>e",
+				"<leader>ee",
 				function()
-					-- Toggle Neo-tree filesystem on the left
 					require("neo-tree.command").execute({
 						toggle = true,
 						source = "filesystem",
@@ -20,17 +19,56 @@ return {
 						reveal = true,
 					})
 				end,
-				desc = "Toggle Neo-tree",
+				desc = "Neo-tree: Filesystem",
+			},
+			{
+				"<leader>eb",
+				function()
+					require("neo-tree.command").execute({
+						toggle = true,
+						source = "buffers",
+						position = "left",
+					})
+				end,
+				desc = "Neo-tree: Open Buffers",
 			},
 		},
 		config = function()
 			require("neo-tree").setup({
-				close_if_last_window = true, -- Neo-tree built-in behavior (best effort)
+				close_if_last_window = true,
 				popup_border_style = "rounded",
 				filesystem = {
 					follow_current_file = { enabled = true },
 					hijack_netrw_behavior = "open_default",
 					use_libuv_file_watcher = true,
+				},
+				buffers = {
+					follow_current_file = { enabled = true },
+					group_empty_dirs = true,
+					show_unloaded = true,
+					window = {
+						mappings = {
+							["bd"] = "buffer_delete",
+							["<bs>"] = "navigate_up",
+							["."] = "set_root",
+							["w"] = "save_buffer", -- <--- NUEVO MAPEO AQUÍ
+						},
+					},
+					-- DEFINICIÓN DEL COMANDO PERSONALIZADO
+					commands = {
+						save_buffer = function(state)
+							local node = state.tree:get_node()
+							if node.type == "file" and node.extra and node.extra.bufnr then
+								-- Ejecuta el comando :write en el buffer seleccionado
+								vim.api.nvim_buf_call(node.extra.bufnr, function()
+									vim.cmd("write")
+								end)
+								print("Guardado: " .. node.name)
+							else
+								print("No se puede guardar este nodo.")
+							end
+						end,
+					},
 				},
 				window = {
 					width = 34,
@@ -40,8 +78,6 @@ return {
 				},
 			})
 
-			-- Extra safety: if Neo-tree is the ONLY window left, quit/close it.
-			-- (Some layouts/splits can bypass close_if_last_window.)
 			vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
 				callback = function()
 					if vim.fn.winnr("$") ~= 1 then
@@ -49,8 +85,6 @@ return {
 					end
 					local ft = vim.bo.filetype
 					if ft == "neo-tree" then
-						-- If it's literally the last window, closing it would end the session anyway.
-						-- Use :quit to avoid getting "stuck" in the tree.
 						vim.cmd("quit")
 					end
 				end,

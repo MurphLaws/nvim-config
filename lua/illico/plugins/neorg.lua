@@ -36,6 +36,35 @@ return {
 				ft = "norg",
 				desc = "[neorg] Refile subtree",
 			},
+
+			-- date insert (no brackets)
+			{
+				"<localleader>id",
+				function()
+					-- Example (es locale): Diciembre 27, 2025
+					local s = vim.fn.strftime("%B %d, %Y")
+					local first = vim.fn.strcharpart(s, 0, 1)
+					local rest = vim.fn.strcharpart(s, 1)
+					s = vim.fn.toupper(first) .. rest
+					vim.api.nvim_put({ s }, "c", true, true)
+				end,
+				ft = "norg",
+				desc = "[neorg] insert day date",
+			},
+
+			{
+				"<localleader>iw",
+				function()
+					-- Example (es locale): Diciembre, 2025 - w52
+					local s = vim.fn.strftime("%B, %Y") .. " - w" .. vim.fn.strftime("%V")
+					local first = vim.fn.strcharpart(s, 0, 1)
+					local rest = vim.fn.strcharpart(s, 1)
+					s = vim.fn.toupper(first) .. rest
+					vim.api.nvim_put({ s }, "c", true, true)
+				end,
+				ft = "norg",
+				desc = "[neorg] insert week date",
+			},
 		},
 
 		config = function()
@@ -51,16 +80,14 @@ return {
 						},
 					},
 
-					-- Captures
+					-- captures
 					["external.better-captures"] = {
 						config = {
 							captures = {
 								-- IMPORTANT:
 								-- neorg-better-captures uses LuaSnip fmt{} under the hood.
-								-- That means:
-								--   - A lone "{" will CRASH (your error)
-								--   - Tokens like "{date}" will also be interpreted as fmt placeholders and can CRASH
-								-- So we ONLY use "{}" placeholders here (balanced braces).
+								-- A lone "{" or "{date}" WILL crash.
+								-- Only "{}" placeholders allowed.
 								project = {
 									path = "gtd/projects.norg",
 									type = "text",
@@ -79,6 +106,19 @@ return {
 ]],
 									workspace = "notes",
 								},
+								-- === NUEVO CAPTURE GTD (IN-NOTE) ===
+								in_note = {
+									path = "in.norg",
+									workspace = "notes",
+									-- Esto busca el headline existente "* IN"
+									headline = "IN",
+									type = "text",
+									-- Crea un nivel 2 (**) debajo del nivel 1 (*)
+									content = [[
+** {}
+   {}
+]],
+								},
 							},
 						},
 					},
@@ -86,7 +126,7 @@ return {
 			})
 
 			-- =========================
-			-- View persistence
+			-- view persistence
 			-- =========================
 			vim.opt.viewdir = vim.fn.stdpath("state") .. "/view"
 			vim.fn.mkdir(vim.opt.viewdir:get(), "p")
@@ -115,7 +155,7 @@ return {
 			})
 
 			-- =========================
-			-- Refile implementation
+			-- refile implementation
 			-- =========================
 
 			local function read_file_lines(path)
@@ -237,7 +277,7 @@ return {
 				end)
 
 				vim.ui.select(items, {
-					prompt = "Refile to file:",
+					prompt = "refile to file:",
 					format_item = function(item)
 						return item.label
 					end,
@@ -253,14 +293,14 @@ return {
 					for _, h in ipairs(heads) do
 						table.insert(targets, {
 							kind = "head",
-							label = string.rep("  ", h.level - 1) .. h.raw,
+							label = string.rep("  ", h.level - 1) .. h.raw,
 							lnum = h.lnum,
 							level = h.level,
 						})
 					end
 
 					vim.ui.select(targets, {
-						prompt = "Under headline:",
+						prompt = "under headline:",
 						format_item = function(item)
 							return item.label
 						end,
