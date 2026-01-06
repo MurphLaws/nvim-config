@@ -1,7 +1,14 @@
 -- illico/core/options.lua
 
 -- ===== Basics =====
-vim.opt.guicursor = ""
+-- Configuración del cursor:
+-- n-v-c-sm:block  -> Bloque en modos Normal, Visual, Comando
+-- i-ci-ve:ver25   -> Barra vertical fina en modo Insertar
+-- r-cr-o:hor20    -> Subrayado en modo Reemplazo
+vim.opt.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20"
+
+vim.opt.cursorline = true -- Resalta la línea donde está el cursor
+
 vim.opt.nu = true
 vim.opt.relativenumber = true
 vim.opt.signcolumn = "yes"
@@ -35,9 +42,3 @@ vim.o.wildoptions = "" -- IMPORTANT: removes the built-in popupmenu behavior
 -- Transparency: Clear background for main window and floating windows
 vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-
--- ===== Godot Integration =====
--- Inicia un servidor (socket) en una ruta fija para que Godot pueda conectarse
--- a esta instancia de Neovim en lugar de abrir una nueva.
-local godot_socket = "/tmp/godot.pipe"
-pcall(vim.fn.serverstart, godot_socket)

@@ -1,12 +1,10 @@
 return {
 	"nvim-lualine/lualine.nvim",
-	dependencies = { "EdenEast/nightfox.nvim", "nvim-tree/nvim-web-devicons" },
+	dependencies = { "nvim-tree/nvim-web-devicons" },
 	config = function()
-		-- Load the Carbonfox colorscheme
-
 		require("lualine").setup({
 			options = {
-				theme = "carbonfox",
+				theme = "auto", -- 'auto' detectará que usas catppuccin y usará los colores correctos por modo
 				icons_enabled = true,
 				component_separators = { left = "│", right = "│" },
 				section_separators = { left = "", right = "" },
